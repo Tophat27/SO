@@ -13,7 +13,11 @@ typedef struct
     long long somador;
 }Thread;
 void* soma(){
-
+ Thread *args =(Thread*)args;
+ args -> somador =0;
+ for(int y =args-> comeco ; y < args-> fim; y++){
+    args-> somador += args-> vetor[i];
+ }
 }
 int main(){
     int *vector;
