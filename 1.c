@@ -1,9 +1,17 @@
+/******************************************************************************
+
+                            Online C Compiler.
+                Code, Compile, Run and Debug C program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <pthreads.h>
+#include <pthread.h>
 
-#define vector 1000 //da questao
-#define n_threads 2 //de teste
+#define TAM 1000 //da questao
+#define n_threads 2//de teste
 
 typedef struct 
 {
@@ -12,41 +20,49 @@ typedef struct
     int fim;
     long long somador;
 }Thread;
-void* soma(){
- Thread *args =(Thread*)args;
- args -> somador =0;
- for(int y =args-> comeco ; y < args-> fim; y++){
-    args-> somador += args-> vetor[i];
- }
-}
-int main(){
-    int *vector;
-    p_thread_t threads[n_threads];
-    args Thread[n_threads];
+void* soma(void *arg){
+    Thread *args = (Thread*) arg;
+    args->somador = 0;
 
-    vector = (int*)malloc(vector * sizeof(int));
-    for (int x =0 ; x < n_threads:x++){
-        vector[x]=1;
+    for (int y = args->comeco; y < args->fim; y++) {
+        args->somador += args->vetor[y];
     }
-    int chunk = vector/n_threads;
+
+    return NULL;
+}
+
+int main(){
+     pthread_t threads[n_threads];
+     Thread args[n_threads];
+    int *vetor = (int*)malloc(TAM * sizeof(int));
+    for (int x =0 ; x < TAM;x++){
+        vetor[x]=1;
+    }
+    int chunk = TAM/n_threads;
     for (int i = 0 ; i < n_threads; i++)
     {
-        Thread[i].vetor = vector;
-        Thread[i].comeco=  i*chunk;
-        if (i == n_threads){
-            Thread[i].fim = vector;
+        args[i].vetor = TAM;
+        args[i].comeco=  i*chunk;
+        if (i == n_threads-1){
+            args[i].fim = TAM;
         }else{
-            Thread[i].fim = (i+1) * chunk;
+            args[i].fim = i * chunk;
         }
-        if(pthread_create(&threads[i],NULL,soma,(void*)&Thread[i])!=0){
+        if(pthread_create(&threads[i],NULL,soma,(void*)&args[i])!=0){
             perror("algo errado com a thread");
             return 1;
         }
 
     }
     long long total=0;
+    for(int f=0;f<TAM;f++){
+        pthread_join(threads[f], NULL);
+        total += args[f].somador;
+    }
+    
+    
     printf("total: %lld", total);
-    free(vector);
+    free(TAM);
     return 0;
 
 }
