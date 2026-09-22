@@ -41,12 +41,12 @@ int main(){
     int chunk = TAM/n_threads;
     for (int i = 0 ; i < n_threads; i++)
     {
-        args[i].vetor = TAM;
+        args[i].vetor = vetor;
         args[i].comeco=  i*chunk;
         if (i == n_threads-1){
             args[i].fim = TAM;
         }else{
-            args[i].fim = i * chunk;
+            args[i].fim = (i+1) * chunk;
         }
         if(pthread_create(&threads[i],NULL,soma,(void*)&args[i])!=0){
             perror("algo errado com a thread");
@@ -54,15 +54,15 @@ int main(){
         }
 
     }
-    long long total=0;
-    for(int f=0;f<TAM;f++){
+    long long total = 0;
+    for (int f = 0; f < n_threads; f++){    
         pthread_join(threads[f], NULL);
+        printf("add: %lld\n", args[f].somador);
         total += args[f].somador;
     }
-    
-    
-    printf("total: %lld", total);
-    free(TAM);
+
+    printf("total: %lld\n", total);
+    free(vetor);                             
     return 0;
 
 }
