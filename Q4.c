@@ -47,9 +47,13 @@ int main(){
         pthread_join(threads[i], NULL);
     }
 
-    
+    printf("\nResultado final apos %d iteracoes:\n", p);
+    for (int i = 0; i < numIcog; i++) {
+        printf("X[%d] = %f\n", i, X0[i]);
+    }
 
     pthread_barrier_destroy(&barreira);
+    free(threads);
     return 0;
 }
 
@@ -58,18 +62,18 @@ void* jacobi(void *arg){
     int k = 0;
     while (k < p){
 
-        //a lógica desse primeiro for serve para distribuir igualmente as icógnitas as threads, intercalando a execução das threads para cada icógnita
+        //a lógica desse primeiro for serve para distribuir igualmente as icógnitas as threads, intercalando a execução das threads para cada incógnita
         for(int i = id; i < numIcog; i+= N){
             float soma = 0;
             for(int j = 0; j < numIcog; j++){
                 if(i != j){
                     soma += A[i][j]*X0[j];
-                    printf("soma: %f\n", soma);
+                    //printf("soma: %f\n", soma);
                 }
             }
 
             Xi[i] = 1.0/A[i][i] * (b[i] - soma);    
-            printf("X[i]: %f\n", Xi[i]);
+            //printf("X[i]: %f\n", Xi[i]);
             }
             pthread_barrier_wait(&barreira); //barreira para aguardar a threads calcularem seus respectivos xi
         
